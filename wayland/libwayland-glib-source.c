@@ -25,16 +25,17 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
 #endif /* HAVE_ERRNO_H */
 
 #include <glib.h>
+
 #include <wayland-client.h>
 
-#include <libwayland-glib.h>
+#include "libwayland-glib.h"
 
 struct _GWaylandSource {
     GSource source;
