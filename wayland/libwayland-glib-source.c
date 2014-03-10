@@ -118,7 +118,6 @@ static GSourceFuncs _g_wayland_source_funcs = {
     _g_wayland_source_finalize
 };
 
-G_WAYLAND_EXPORT
 GWaylandSource *
 g_wayland_source_new(GMainContext *context, const gchar *name)
 {
@@ -134,7 +133,6 @@ g_wayland_source_new(GMainContext *context, const gchar *name)
     return source;
 }
 
-G_WAYLAND_EXPORT
 GWaylandSource *
 g_wayland_source_new_for_display(GMainContext *context, struct wl_display *display)
 {
@@ -151,7 +149,6 @@ g_wayland_source_new_for_display(GMainContext *context, struct wl_display *displ
     return source;
 }
 
-G_WAYLAND_EXPORT
 void
 g_wayland_source_ref(GWaylandSource *self)
 {
@@ -160,7 +157,6 @@ g_wayland_source_ref(GWaylandSource *self)
     g_source_ref((GSource *)self);
 }
 
-G_WAYLAND_EXPORT
 void
 g_wayland_source_unref(GWaylandSource *self)
 {
@@ -169,7 +165,6 @@ g_wayland_source_unref(GWaylandSource *self)
     g_source_unref((GSource *)self);
 }
 
-G_WAYLAND_EXPORT
 void
 g_wayland_source_set_error_callback(GWaylandSource *self, GSourceFunc callback, gpointer user_data, GDestroyNotify destroy_notify)
 {
@@ -178,7 +173,6 @@ g_wayland_source_set_error_callback(GWaylandSource *self, GSourceFunc callback, 
     g_source_set_callback((GSource *)self, callback, user_data, destroy_notify);
 }
 
-G_WAYLAND_EXPORT
 struct wl_display *
 g_wayland_source_get_display(GWaylandSource *self)
 {
