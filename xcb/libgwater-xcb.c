@@ -27,6 +27,11 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
+#ifdef G_LOG_DOMAIN
+#undef G_LOG_DOMAIN
+#endif /* G_LOG_DOMAIN */
+#define G_LOG_DOMAIN "WaterXcb"
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif /* HAVE_STDLIB_H */
