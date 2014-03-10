@@ -1,5 +1,5 @@
 /*
- * libwayland-glib - Library to integrate Wayland nicely with GLib
+ * libgwater-wayland - Wayland GSource
  *
  * Copyright © 2012-2014 Quentin "Sardem FF7" Glidic
  *
@@ -35,9 +35,9 @@
 
 #include <wayland-client.h>
 
-#include "libwayland-glib.h"
+#include "libgwater-wayland.h"
 
-struct _GWaylandSource {
+struct _GWaterWaylandSource {
     GSource source;
     gboolean display_owned;
     struct wl_display *display;
@@ -46,9 +46,9 @@ struct _GWaylandSource {
 };
 
 static gboolean
-_g_wayland_source_prepare(GSource *source, gint *timeout)
+_g_water_wayland_source_prepare(GSource *source, gint *timeout)
 {
-    GWaylandSource *self = (GWaylandSource *)source;
+    GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
     if ( wl_display_flush(self->display) < 0)
         self->error = errno;
@@ -58,17 +58,17 @@ _g_wayland_source_prepare(GSource *source, gint *timeout)
 }
 
 static gboolean
-_g_wayland_source_check(GSource *source)
+_g_water_wayland_source_check(GSource *source)
 {
-    GWaylandSource *self = (GWaylandSource *)source;
+    GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
     return ( g_source_query_unix_fd(source, self->fd) > 0 );
 }
 
 static gboolean
-_g_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
+_g_water_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
 {
-    GWaylandSource *self = (GWaylandSource *)source;
+    GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
     if ( self->error > 0 )
     {
@@ -103,42 +103,42 @@ _g_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_
 }
 
 static void
-_g_wayland_source_finalize(GSource *source)
+_g_water_wayland_source_finalize(GSource *source)
 {
-    GWaylandSource *self = (GWaylandSource *)source;
+    GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
     if ( self->display_owned )
         wl_display_disconnect(self->display);
 }
 
-static GSourceFuncs _g_wayland_source_funcs = {
-    _g_wayland_source_prepare,
-    _g_wayland_source_check,
-    _g_wayland_source_dispatch,
-    _g_wayland_source_finalize
+static GSourceFuncs _g_water_wayland_source_funcs = {
+    _g_water_wayland_source_prepare,
+    _g_water_wayland_source_check,
+    _g_water_wayland_source_dispatch,
+    _g_water_wayland_source_finalize
 };
 
-GWaylandSource *
-g_wayland_source_new(GMainContext *context, const gchar *name)
+GWaterWaylandSource *
+g_water_wayland_source_new(GMainContext *context, const gchar *name)
 {
     struct wl_display *display;
-    GWaylandSource *source;
+    GWaterWaylandSource *source;
 
     display = wl_display_connect(name);
     if ( display == NULL )
         return NULL;
 
-    source = g_wayland_source_new_for_display(context, display);
+    source = g_water_wayland_source_new_for_display(context, display);
     source->display_owned = TRUE;
     return source;
 }
 
-GWaylandSource *
-g_wayland_source_new_for_display(GMainContext *context, struct wl_display *display)
+GWaterWaylandSource *
+g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display *display)
 {
-    GWaylandSource *source;
+    GWaterWaylandSource *source;
 
-    source = (GWaylandSource *)g_source_new(&_g_wayland_source_funcs, sizeof(GWaylandSource));
+    source = (GWaterWaylandSource *)g_source_new(&_g_water_wayland_source_funcs, sizeof(GWaterWaylandSource));
 
     source->display = display;
 
@@ -150,7 +150,7 @@ g_wayland_source_new_for_display(GMainContext *context, struct wl_display *displ
 }
 
 void
-g_wayland_source_ref(GWaylandSource *self)
+g_water_wayland_source_ref(GWaterWaylandSource *self)
 {
     g_return_if_fail(self != NULL);
 
@@ -158,7 +158,7 @@ g_wayland_source_ref(GWaylandSource *self)
 }
 
 void
-g_wayland_source_unref(GWaylandSource *self)
+g_water_wayland_source_unref(GWaterWaylandSource *self)
 {
     g_return_if_fail(self != NULL);
 
@@ -166,7 +166,7 @@ g_wayland_source_unref(GWaylandSource *self)
 }
 
 void
-g_wayland_source_set_error_callback(GWaylandSource *self, GSourceFunc callback, gpointer user_data, GDestroyNotify destroy_notify)
+g_water_wayland_source_set_error_callback(GWaterWaylandSource *self, GSourceFunc callback, gpointer user_data, GDestroyNotify destroy_notify)
 {
     g_return_if_fail(self != NULL);
 
@@ -174,7 +174,7 @@ g_wayland_source_set_error_callback(GWaylandSource *self, GSourceFunc callback, 
 }
 
 struct wl_display *
-g_wayland_source_get_display(GWaylandSource *self)
+g_water_wayland_source_get_display(GWaterWaylandSource *self)
 {
     g_return_val_if_fail(self != NULL, NULL);
 

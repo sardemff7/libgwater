@@ -1,5 +1,5 @@
 /*
- * libxcb-glib - Library to integrate XCB nicely with GLib
+ * libgwater-wayland - Wayland GSource
  *
  * Copyright © 2012-2014 Quentin "Sardem FF7" Glidic
  *
@@ -23,23 +23,21 @@
  *
  */
 
-#ifndef __LIBXCB_GLIB_H__
-#define __LIBXCB_GLIB_H__
+#ifndef __G_WATER_WAYLAND_H__
+#define __G_WATER_WAYLAND_H__
 
 G_BEGIN_DECLS
 
-typedef struct _GXcbSource GXcbSource;
+typedef struct _GWaterWaylandSource GWaterWaylandSource;
 
-typedef gboolean (*GXcbEventCallback)(xcb_generic_event_t *event, gpointer user_data);
-typedef void (*GXcbErrorCallback)(gpointer user_data);
+GWaterWaylandSource *g_water_wayland_source_new(GMainContext *context, const gchar *name);
+GWaterWaylandSource *g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display *display);
+void g_water_wayland_source_ref(GWaterWaylandSource *self);
+void g_water_wayland_source_unref(GWaterWaylandSource *self);
 
-GXcbSource *g_xcb_source_new(GMainContext *context, const gchar *display, gint *screen, GXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func);
-GXcbSource *g_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func);
-void g_xcb_source_ref(GXcbSource *self);
-void g_xcb_source_unref(GXcbSource *self);
-
-xcb_connection_t *g_xcb_source_get_connection(GXcbSource *source);
+void g_water_wayland_source_set_error_callback(GWaterWaylandSource *self, GSourceFunc callback, gpointer user_data, GDestroyNotify destroy_notify);
+struct wl_display *g_water_wayland_source_get_display(GWaterWaylandSource *source);
 
 G_END_DECLS
 
-#endif /* __LIBXCB_GLIB_H__ */
+#endif /* __G_WATER_WAYLAND_H__ */

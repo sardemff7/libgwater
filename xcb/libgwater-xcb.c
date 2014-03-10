@@ -1,5 +1,5 @@
 /*
- * libxcb-glib - Library to integrate XCB nicely with GLib
+ * libgwater-xcb - XCB GSource
  *
  * Copyright © 2012-2014 Quentin "Sardem FF7" Glidic
  *
@@ -35,9 +35,9 @@
 
 #include <xcb/xcb.h>
 
-#include "libxcb-glib.h"
+#include "libgwater-xcb.h"
 
-struct _GXcbSource {
+struct _GWaterXcbSource {
     GSource source;
     gboolean connection_owned;
     xcb_connection_t *connection;
@@ -46,24 +46,24 @@ struct _GXcbSource {
 };
 
 static void
-_g_xcb_source_event_free(gpointer data, gpointer user_data)
+_g_water_xcb_source_event_free(gpointer data, gpointer user_data)
 {
     free(data);
 }
 
 static gboolean
-_g_xcb_source_prepare(GSource *source, gint *timeout)
+_g_water_xcb_source_prepare(GSource *source, gint *timeout)
 {
-    GXcbSource *self = (GXcbSource *)source;
+    GWaterXcbSource *self = (GWaterXcbSource *)source;
     xcb_flush(self->connection);
     *timeout = -1;
     return ! g_queue_is_empty(self->queue);
 }
 
 static gboolean
-_g_xcb_source_check(GSource *source)
+_g_water_xcb_source_check(GSource *source)
 {
-    GXcbSource *self = (GXcbSource *)source;
+    GWaterXcbSource *self = (GWaterXcbSource *)source;
 
     if ( self->fd.revents & G_IO_IN )
     {
@@ -80,46 +80,46 @@ _g_xcb_source_check(GSource *source)
 }
 
 static gboolean
-_g_xcb_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
+_g_water_xcb_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
 {
-    GXcbSource *self = (GXcbSource *)source;
+    GWaterXcbSource *self = (GWaterXcbSource *)source;
     xcb_generic_event_t *event;
 
     gboolean ret;
 
     event = g_queue_pop_head(self->queue);
-    ret = ((GXcbEventCallback)callback)(event, user_data);
-    _g_xcb_source_event_free(event, NULL);
+    ret = ((GWaterXcbEventCallback)callback)(event, user_data);
+    _g_water_xcb_source_event_free(event, NULL);
 
     return ret;
 }
 
 static void
-_g_xcb_source_finalize(GSource *source)
+_g_water_xcb_source_finalize(GSource *source)
 {
-    GXcbSource *self = (GXcbSource *)source;
+    GWaterXcbSource *self = (GWaterXcbSource *)source;
 
-    g_queue_foreach(self->queue, _g_xcb_source_event_free, NULL);
+    g_queue_foreach(self->queue, _g_water_xcb_source_event_free, NULL);
     g_queue_free(self->queue);
 
     if ( self->connection_owned )
         xcb_disconnect(self->connection);
 }
 
-static GSourceFuncs _g_xcb_source_funcs = {
-    _g_xcb_source_prepare,
-    _g_xcb_source_check,
-    _g_xcb_source_dispatch,
-    _g_xcb_source_finalize
+static GSourceFuncs _g_water_xcb_source_funcs = {
+    _g_water_xcb_source_prepare,
+    _g_water_xcb_source_check,
+    _g_water_xcb_source_dispatch,
+    _g_water_xcb_source_finalize
 };
 
-GXcbSource *
-g_xcb_source_new(GMainContext *context, const gchar *display, gint *screen, GXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
+GWaterXcbSource *
+g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
 {
     g_return_val_if_fail(callback != NULL, NULL);
 
     xcb_connection_t *connection;
-    GXcbSource *source;
+    GWaterXcbSource *source;
 
     connection = xcb_connect(display, screen);
     if ( xcb_connection_has_error(connection) )
@@ -128,19 +128,19 @@ g_xcb_source_new(GMainContext *context, const gchar *display, gint *screen, GXcb
         return NULL;
     }
 
-    source = g_xcb_source_new_for_connection(context, connection, callback, user_data, destroy_func);
+    source = g_water_xcb_source_new_for_connection(context, connection, callback, user_data, destroy_func);
     source->connection_owned = TRUE;
     return source;
 }
 
-GXcbSource *
-g_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
+GWaterXcbSource *
+g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
 {
     g_return_val_if_fail(callback != NULL, NULL);
 
-    GXcbSource *source;
+    GWaterXcbSource *source;
 
-    source = (GXcbSource *)g_source_new(&_g_xcb_source_funcs, sizeof(GXcbSource));
+    source = (GWaterXcbSource *)g_source_new(&_g_water_xcb_source_funcs, sizeof(GWaterXcbSource));
 
     source->connection = connection;
     source->queue = g_queue_new();
@@ -157,7 +157,7 @@ g_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connect
 }
 
 void
-g_xcb_source_ref(GXcbSource *self)
+g_water_xcb_source_ref(GWaterXcbSource *self)
 {
     g_return_if_fail(self != NULL);
 
@@ -165,7 +165,7 @@ g_xcb_source_ref(GXcbSource *self)
 }
 
 void
-g_xcb_source_unref(GXcbSource *self)
+g_water_xcb_source_unref(GWaterXcbSource *self)
 {
     g_return_if_fail(self != NULL);
 
@@ -173,7 +173,7 @@ g_xcb_source_unref(GXcbSource *self)
 }
 
 xcb_connection_t *
-g_xcb_source_get_connection(GXcbSource *self)
+g_water_xcb_source_get_connection(GWaterXcbSource *self)
 {
     g_return_val_if_fail(self != NULL, NULL);
 
