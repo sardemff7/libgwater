@@ -135,7 +135,7 @@ g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen
     g_return_val_if_fail(callback != NULL, NULL);
 
     xcb_connection_t *connection;
-    GWaterXcbSource *source;
+    GWaterXcbSource *self;
 
     connection = xcb_connect(display, screen);
     if ( xcb_connection_has_error(connection) )
@@ -144,36 +144,39 @@ g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen
         return NULL;
     }
 
-    source = g_water_xcb_source_new_for_connection(context, connection, callback, user_data, destroy_func);
-    source->connection_owned = TRUE;
-    return source;
+    self = g_water_xcb_source_new_for_connection(context, connection, callback, user_data, destroy_func);
+    self->connection_owned = TRUE;
+    return self;
 }
 
 GWaterXcbSource *
 g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
 {
+    g_return_val_if_fail(connection != NULL, NULL);
     g_return_val_if_fail(callback != NULL, NULL);
 
-    GWaterXcbSource *source;
+    GSource *source;
+    GWaterXcbSource *self;
 
-    source = (GWaterXcbSource *)g_source_new(&_g_water_xcb_source_funcs, sizeof(GWaterXcbSource));
+    source = g_source_new(&_g_water_xcb_source_funcs, sizeof(GWaterXcbSource));
+    self = (GWaterXcbSource *)source;
+    self->connection = connection;
 
-    source->connection = connection;
-    source->queue = g_queue_new();
+    self->queue = g_queue_new();
 
 #if GLIB_CHECK_VERSION(2,36,0)
-    source->fd = g_source_add_unix_fd((GSource *)source, xcb_get_file_descriptor(connection), G_IO_IN);
+    self->fd = g_source_add_unix_fd(source, xcb_get_file_descriptor(self->connection), G_IO_IN);
 #else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    source->fd.fd = xcb_get_file_descriptor(connection);
-    source->fd.events = G_IO_IN;
-    g_source_add_poll((GSource *)source, &source->fd);
+    self->fd.fd = xcb_get_file_descriptor(self->connection);
+    self->fd.events = G_IO_IN;
+    g_source_add_poll(source, &self->fd);
 #endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
-    g_source_attach((GSource *)source, context);
+    g_source_attach(source, context);
 
-    g_source_set_callback((GSource *)source, (GSourceFunc)callback, user_data, destroy_func);
+    g_source_set_callback(source, (GSourceFunc)callback, user_data, destroy_func);
 
-    return source;
+    return self;
 }
 
 void

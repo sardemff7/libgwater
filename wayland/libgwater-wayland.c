@@ -142,37 +142,40 @@ GWaterWaylandSource *
 g_water_wayland_source_new(GMainContext *context, const gchar *name)
 {
     struct wl_display *display;
-    GWaterWaylandSource *source;
+    GWaterWaylandSource *self;
 
     display = wl_display_connect(name);
     if ( display == NULL )
         return NULL;
 
-    source = g_water_wayland_source_new_for_display(context, display);
-    source->display_owned = TRUE;
-    return source;
+    self = g_water_wayland_source_new_for_display(context, display);
+    self->display_owned = TRUE;
+    return self;
 }
 
 GWaterWaylandSource *
 g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display *display)
 {
-    GWaterWaylandSource *source;
+    g_return_val_if_fail(display != NULL, NULL);
 
-    source = (GWaterWaylandSource *)g_source_new(&_g_water_wayland_source_funcs, sizeof(GWaterWaylandSource));
+    GSource *source;
+    GWaterWaylandSource *self;
 
-    source->display = display;
+    source = g_source_new(&_g_water_wayland_source_funcs, sizeof(GWaterWaylandSource));
+    source = (GWaterWaylandSource *)source;
+    self->display = display;
 
 #if GLIB_CHECK_VERSION(2,36,0)
-    source->fd = g_source_add_unix_fd((GSource *)source, wl_display_get_fd(display), G_IO_IN | G_IO_ERR | G_IO_HUP);
+    self->fd = g_source_add_unix_fd(source, wl_display_get_fd(self->display), G_IO_IN | G_IO_ERR | G_IO_HUP);
 #else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    source->fd.fd = wl_display_get_fd(display);
-    source->fd.events = G_IO_IN | G_IO_ERR | G_IO_HUP;
-    g_source_add_poll((GSource *)source, &source->fd);
+    self->fd.fd = wl_display_get_fd(self->display);
+    self->fd.events = G_IO_IN | G_IO_ERR | G_IO_HUP;
+    g_source_add_poll(source, &self->fd);
 #endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
-    g_source_attach((GSource *)source, context);
+    g_source_attach(source, context);
 
-    return source;
+    return self;
 }
 
 void
