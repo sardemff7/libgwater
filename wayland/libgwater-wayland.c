@@ -162,7 +162,7 @@ g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display 
     GWaterWaylandSource *self;
 
     source = g_source_new(&_g_water_wayland_source_funcs, sizeof(GWaterWaylandSource));
-    source = (GWaterWaylandSource *)source;
+    self = (GWaterWaylandSource *)source;
     self->display = display;
 
 #if GLIB_CHECK_VERSION(2,36,0)
