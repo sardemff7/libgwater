@@ -30,7 +30,7 @@
 #ifdef G_LOG_DOMAIN
 #undef G_LOG_DOMAIN
 #endif /* G_LOG_DOMAIN */
-#define G_LOG_DOMAIN "WaterWayland"
+#define G_LOG_DOMAIN "GWaterWayland"
 
 #ifdef HAVE_ERRNO_H
 #include <errno.h>

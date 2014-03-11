@@ -30,7 +30,7 @@
 #ifdef G_LOG_DOMAIN
 #undef G_LOG_DOMAIN
 #endif /* G_LOG_DOMAIN */
-#define G_LOG_DOMAIN "WaterXcb"
+#define G_LOG_DOMAIN "GWaterXcb"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
