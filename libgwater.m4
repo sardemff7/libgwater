@@ -37,3 +37,15 @@ AC_DEFUN([GW_CHECK_WAYLAND], [
 AC_DEFUN([GW_CHECK_XCB], [
     _GW_CHECK([XCB], [xcb], [xcb $2], [$1])
 ])
+
+AC_DEFUN([GW_CHECK_MPD], [
+    AC_CHECK_HEADERS([errno.h sys/socket.h])
+
+    gw_mpd_gio_unix=
+    PKG_CHECK_EXISTS([gio-unix-2.0], gw_mpd_have_gio_unix=yes, gw_mpd_have_gio_unix=no)
+    if test x$gw_mpd_have_gio_unix = xyes; then
+        gw_mpd_gio_unix="gio-unix-2.0"
+    fi
+
+    _GW_CHECK([MPD], [mpd], [libmpdclient gobject-2.0 gio-2.0 $gw_mpd_gio_unix $2], [$1])
+])
