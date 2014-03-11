@@ -55,7 +55,7 @@ _g_water_wayland_source_prepare(GSource *source, gint *timeout)
 {
     GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
-    if ( wl_display_flush(self->display) < 0)
+    if ( wl_display_flush(self->display) < 0 )
         self->error = errno;
 
     *timeout = -1;
