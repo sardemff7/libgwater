@@ -1,6 +1,9 @@
 AC_DEFUN([GW_INIT], [
+    AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+
     m4_define([_gw_dir], m4_default([$1], [libgwater]))
     m4_define([_gw_dir_canon], m4_translit(_gw_dir, [/+-], [___]))
+
     m4_define([_GW_USE_LIBTOOL], [])
     m4_ifblank([LT_INIT], [m4_define([_GW_USE_LIBTOOL], [yes])]) dnl Libtool redefine LT_INIT to blank when used
     m4_define([GW_INIT])
