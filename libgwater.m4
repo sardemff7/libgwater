@@ -57,3 +57,9 @@ AC_DEFUN([GW_CHECK_MPD], [
 
     _GW_CHECK([MPD], [mpd], [libmpdclient gobject-2.0 gio-2.0 $gw_mpd_gio_unix $2], [$1])
 ])
+
+AC_DEFUN([GW_CHECK_ALSA_MIXER], [
+    AC_CHECK_HEADERS([poll.h math.h])
+
+    _GW_CHECK([ALSA_MIXER], [alsa-mixer], [alsa $2], [$1])
+])
