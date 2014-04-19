@@ -59,6 +59,7 @@ struct _GWaterMpdSource {
     gboolean mpd_owned;
     struct mpd_async *mpd;
     enum mpd_async_event events;
+    enum mpd_error error;
 #if GLIB_CHECK_VERSION(2,36,0)
     gpointer fd;
 #else /* ! GLIB_CHECK_VERSION(2,36,0) */
@@ -100,8 +101,10 @@ _g_water_mpd_source_prepare(GSource *source, gint *timeout)
 #endif /* ! GLIB_CHECK_VERSION(2,36,0) */
     }
 
+    self->error = mpd_async_get_error(self->mpd);
+
     *timeout = -1;
-    return FALSE;
+    return ( self->error != MPD_ERROR_SUCCESS );
 }
 
 static gboolean
@@ -141,6 +144,12 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
     if ( revents & G_IO_OUT )
         events |= MPD_ASYNC_EVENT_WRITE;
 
+    enum mpd_error error = self->error;
+    self->error = MPD_ERROR_SUCCESS;
+
+    if ( error != MPD_ERROR_SUCCESS )
+        return ((GWaterMpdLineCallback)callback)(NULL, error, user_data);
+
     if ( events != 0 )
     {
         if ( ! mpd_async_io(self->mpd, events) )
@@ -149,7 +158,6 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
 
     gboolean ret;
     gchar *line;
-    enum mpd_error error;
     do
     {
         line = mpd_async_recv_line(self->mpd);
