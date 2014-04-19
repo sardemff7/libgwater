@@ -26,7 +26,7 @@ AC_DEFUN([_GW_CHECK], [
         m4_define([_GW_LIBRARY_VARIABLE], [LT])
     ])
 
-    m4_syscmd([sed ]_gw_dir[/template.mk -e 's:@gw_dir@:]_gw_dir[:g' -e 's:@gw_dir_canon@:]_gw_dir_canon[:g' -e 's:@LIBRARY_VARIABLE@:]_GW_LIBRARY_VARIABLE[:g' -e 's:@library_suffix@:]_gw_library_suffix[:g' -e 's:@component@:][$2][:g' -e 's:@PREFIX@:]_GW_PREFIX[:g' > ]_gw_dir[/][$2][.mk])
+    m4_syscmd([sed ]_gw_dir[/template.mk -e 's:@gw_dir@:]_gw_dir[:g' -e 's:@gw_dir_canon@:]_gw_dir_canon[:g' -e 's:@LIBRARY_VARIABLE@:]_GW_LIBRARY_VARIABLE[:g' -e 's:@library_suffix@:]_gw_library_suffix[:g' -e 's:@config_h@:]m4_default(AH_HEADER, [$(null)])[:g' -e 's:@component@:][$2][:g' -e 's:@PREFIX@:]_GW_PREFIX[:g' > ]_gw_dir[/][$2][.mk])
 
     m4_undefine([_GW_PREFIX])
 ])

@@ -3,7 +3,8 @@ noinst_@LIBRARY_VARIABLE@LIBRARIES += \
 
 @gw_dir_canon@_libgwater_@component@_@library_suffix@a_SOURCES = \
 	@gw_dir@/@component@/libgwater-@component@.c \
-	@gw_dir@/@component@/libgwater-@component@.h
+	@gw_dir@/@component@/libgwater-@component@.h \
+	@config_h@
 
 @gw_dir_canon@_libgwater_@component@_@library_suffix@a_CFLAGS = \
 	$(AM_CFLAGS) \
