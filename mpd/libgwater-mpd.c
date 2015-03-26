@@ -97,7 +97,7 @@ _g_water_mpd_source_prepare(GSource *source, gint *timeout)
 #if GLIB_CHECK_VERSION(2,36,0)
         g_source_modify_unix_fd(source, self->fd, nevents);
 #else /* ! GLIB_CHECK_VERSION(2,36,0) */
-        source->fd.events = nevents;
+        self->fd.events = nevents;
 #endif /* ! GLIB_CHECK_VERSION(2,36,0) */
     }
 
