@@ -46,11 +46,7 @@ struct _GWaterXcbSource {
     GSource source;
     gboolean connection_owned;
     xcb_connection_t *connection;
-#if GLIB_CHECK_VERSION(2,36,0)
     gpointer fd;
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    GPollFD fd;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
     GQueue *queue;
 };
 
@@ -75,11 +71,7 @@ _g_water_xcb_source_check(GSource *source)
     GWaterXcbSource *self = (GWaterXcbSource *)source;
 
     GIOCondition revents;
-#if GLIB_CHECK_VERSION(2,36,0)
     revents = g_source_query_unix_fd(source, self->fd);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    revents = self->fd.revents;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     if ( revents & G_IO_IN )
     {
@@ -164,13 +156,7 @@ g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *c
 
     self->queue = g_queue_new();
 
-#if GLIB_CHECK_VERSION(2,36,0)
     self->fd = g_source_add_unix_fd(source, xcb_get_file_descriptor(self->connection), G_IO_IN);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    self->fd.fd = xcb_get_file_descriptor(self->connection);
-    self->fd.events = G_IO_IN;
-    g_source_add_poll(source, &self->fd);
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     g_source_attach(source, context);
 

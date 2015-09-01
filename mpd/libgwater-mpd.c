@@ -60,11 +60,7 @@ struct _GWaterMpdSource {
     struct mpd_async *mpd;
     enum mpd_async_event events;
     enum mpd_error error;
-#if GLIB_CHECK_VERSION(2,36,0)
     gpointer fd;
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    GPollFD fd;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 };
 
 static GIOCondition
@@ -94,11 +90,7 @@ _g_water_mpd_source_prepare(GSource *source, gint *timeout)
         GIOCondition nevents;
         nevents = _g_water_mpd_events_to_gio(events);
 
-#if GLIB_CHECK_VERSION(2,36,0)
         g_source_modify_unix_fd(source, self->fd, nevents);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-        self->fd.events = nevents;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
     }
 
     self->error = mpd_async_get_error(self->mpd);
@@ -113,11 +105,7 @@ _g_water_mpd_source_check(GSource *source)
     GWaterMpdSource *self = (GWaterMpdSource *)source;
 
     GIOCondition revents;
-#if GLIB_CHECK_VERSION(2,36,0)
     revents = g_source_query_unix_fd(source, self->fd);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    revents = self->fd.revents;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     return ( revents > 0 );
 }
@@ -128,11 +116,7 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
     GWaterMpdSource *self = (GWaterMpdSource *)source;
 
     GIOCondition revents;
-#if GLIB_CHECK_VERSION(2,36,0)
     revents = g_source_query_unix_fd(source, self->fd);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    revents = self->fd.revents;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     enum mpd_async_event events = 0;
     if ( revents & G_IO_HUP )
@@ -273,13 +257,7 @@ g_water_mpd_source_new_for_mpd(GMainContext *context, struct mpd_async *mpd, GWa
     GIOCondition events;
     events = _g_water_mpd_events_to_gio(self->events);
 
-#if GLIB_CHECK_VERSION(2,36,0)
     self->fd = g_source_add_unix_fd(source, mpd_async_get_fd(self->mpd), events);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    self->fd.fd = mpd_async_get_fd(self->mpd);
-    self->fd.events = events;
-    g_source_add_poll(source, &self->fd);
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     g_source_attach(source, context);
 

@@ -16,7 +16,7 @@ AC_DEFUN([_GW_CHECK], [
     m4_define([_gw_component], [$2])
     m4_define([_gw_component_canon], m4_translit(_gw_component, [-], [_]))
 
-    gw_glib_min_version="2.28"
+    gw_glib_min_version="2.36"
 
     PKG_CHECK_MODULES(_GW_PREFIX, [glib-2.0 >= $gw_glib_min_version $3])
 

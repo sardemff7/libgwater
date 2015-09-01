@@ -43,11 +43,7 @@ struct _GWaterAlsaMixerSource {
     gboolean mixer_owned;
     snd_mixer_t *mixer;
     gint size;
-#if GLIB_CHECK_VERSION(2,36,0)
     gpointer *fds;
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    GPollFD *fds;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 };
 
 static gboolean
@@ -65,11 +61,7 @@ _g_water_alsa_mixer_source_check(GSource *source)
     GIOCondition revents = 0;
     gint i;
     for ( i = 0 ; i < self->size ; ++i )
-#if GLIB_CHECK_VERSION(2,36,0)
         revents |= g_source_query_unix_fd(source, self->fds[i]);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-        revents |= self->fds[i].revents;
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     return ( revents > 0 );
 }
@@ -153,19 +145,9 @@ g_water_alsa_mixer_source_new_for_mixer(GMainContext *context, snd_mixer_t *mixe
     struct pollfd fds[self->size];
     snd_mixer_poll_descriptors(self->mixer, fds, self->size);
 
-#if GLIB_CHECK_VERSION(2,36,0)
     self->fds = g_new(gpointer, self->size);
     for ( i = 0 ; i < self->size ; ++i )
         self->fds[i] = g_source_add_unix_fd(source, fds[i].fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
-#else /* ! GLIB_CHECK_VERSION(2,36,0) */
-    self->fds = g_new(GPollFD, self->size);
-    for ( i = 0 ; i < self->size ; ++i )
-    {
-        self->fds[i].fd = fds[i].fd;
-        self->fds[i].events = G_IO_IN | G_IO_ERR | G_IO_HUP;
-        g_source_add_poll(source, &self->fds[i]);
-    }
-#endif /* ! GLIB_CHECK_VERSION(2,36,0) */
 
     g_source_attach(source, context);
 
