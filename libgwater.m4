@@ -85,3 +85,7 @@ AC_DEFUN([GW_CHECK_MPD], [
 AC_DEFUN([GW_CHECK_ALSA_MIXER], [
     _GW_CHECK([alsa-mixer], [alsa $2], [sys/poll.h $3], [$1])
 ])
+
+AC_DEFUN([GW_CHECK_NL], [
+    _GW_CHECK([nl], [libnl-3.0 $2], [linux/netlink.h $3], [$1])
+])
