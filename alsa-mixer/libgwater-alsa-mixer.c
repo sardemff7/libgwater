@@ -32,6 +32,8 @@
 #endif /* G_LOG_DOMAIN */
 #define G_LOG_DOMAIN "GWaterAlsaMixer"
 
+#include <sys/poll.h>
+
 #include <glib.h>
 
 #include <asoundlib.h>

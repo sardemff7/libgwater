@@ -32,9 +32,7 @@
 #endif /* G_LOG_DOMAIN */
 #define G_LOG_DOMAIN "GWaterXcb"
 
-#ifdef HAVE_STDLIB_H
 #include <stdlib.h>
-#endif /* HAVE_STDLIB_H */
 
 #include <glib.h>
 

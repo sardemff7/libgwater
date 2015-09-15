@@ -32,9 +32,7 @@
 #endif /* G_LOG_DOMAIN */
 #define G_LOG_DOMAIN "GWaterWayland"
 
-#ifdef HAVE_ERRNO_H
 #include <errno.h>
-#endif /* HAVE_ERRNO_H */
 
 #include <glib.h>
 

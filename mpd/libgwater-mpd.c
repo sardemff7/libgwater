@@ -32,15 +32,9 @@
 #endif /* G_LOG_DOMAIN */
 #define G_LOG_DOMAIN "GWaterMpd"
 
-#ifdef HAVE_ERRNO_H
 #include <errno.h>
-#endif /* HAVE_ERRNO_H */
-#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#endif /* HAVE_SYS_TYPES_H */
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif /* HAVE_SYS_SOCKET_H */
 
 #include <glib.h>
 #include <glib-object.h>
