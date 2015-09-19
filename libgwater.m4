@@ -37,17 +37,17 @@ AC_DEFUN([_GW_CHECK_INTERNAL], [
     PKG_CHECK_MODULES([$3], [glib-2.0 >= ${gw_glib_min_version} $4])
 
     m4_ifnblank([$5], [
-        gw_][$2][_missing_headers=""
+        gw_[$2]_missing_headers=""
         AC_CHECK_HEADERS([$5], [], [], [m4_foreach_w([_gw_header], [$5], [
             [#]ifdef AS_TR_CPP([HAVE_]_gw_header)
             [#]include <_gw_header>
             [#]endif
         ])])
         m4_foreach_w([_gw_header], [$5], [
-            AS_IF([test x${ac_cv_header_]m4_translit(_gw_header, [-/.], [___])[} != xyes], [gw_][$2][_missing_headers="${gw_][$2][_missing_headers} ]_gw_header["])
+            AS_IF([test x${ac_cv_header_]m4_translit(_gw_header, [-/.], [___])[} != xyes], [gw_[$2]_missing_headers="${gw_[$2]_missing_headers} ]_gw_header["])
         ])
-        AS_IF([test -n "${gw_][$2][_missing_headers}"], [
-            AC_MSG_ERROR([Missing headers for libgwater-][$2][ : ${gw_][$3][_missing_headers}])
+        AS_IF([test -n "${gw_[$2]_missing_headers}"], [
+            AC_MSG_ERROR([Missing headers for libgwater-[$1]: ${gw_[$2]_missing_headers}])
         ])
     ])
 ])
