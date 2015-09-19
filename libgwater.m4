@@ -28,7 +28,6 @@ AC_DEFUN([_GW_CHECK_INTERNAL], [
         [-e 's:@gw_dir_canon@:]_gw_dir_canon[:g']dnl
         [-e 's:@library_suffix@:]_gw_library_suffix[:g']dnl
         [-e 's:@LIBRARY_VARIABLE@:]_GW_LIBRARY_VARIABLE[:g']dnl
-        [-e 's:@config_h@:]m4_default(AH_HEADER, [$(null)])[:g']dnl
         [-e 's:@component@:$1:g']dnl
         [-e 's:@component_canon@:$2:g']dnl
         [-e 's:@PREFIX@:$3:g']dnl
