@@ -22,7 +22,7 @@ AC_DEFUN([_GW_CHECK_INTERNAL], [
             [#]endif
         ])])
         m4_foreach_w([_gw_header], [$5], [
-            AS_IF([test x${ac_cv_header_]m4_translit(_gw_header, [-/.], [___])[} != xyes], [[$2]_missing_headers="${[$2]_missing_headers} ]_gw_header["])
+            AS_IF([test x${]AS_TR_SH([ac_cv_header_]_gw_header)[} != xyes], [[$2]_missing_headers="${[$2]_missing_headers} ]_gw_header["])
         ])
         AS_IF([test -n "${[$2]_missing_headers}"], [
             AC_MSG_ERROR([Missing headers for libgwater-[$1]: ${[$2]_missing_headers}])
@@ -36,7 +36,7 @@ AC_DEFUN([_GW_CHECK_INTERNAL], [
 # $4 [user optional] prefix
 AC_DEFUN([_GW_CHECK], [
     AC_REQUIRE([GW_INIT])
-    _GW_CHECK_INTERNAL([$1], [gw_]m4_translit([$1], [-], [_]), [GW_]AS_TR_CPP([$1]), [$2], [$3])
+    _GW_CHECK_INTERNAL([$1], AS_TR_SH([gw_][$1]), AS_TR_CPP([GW_][$1]), [$2], [$3])
 ])
 
 AC_DEFUN([GW_CHECK_WAYLAND], [
