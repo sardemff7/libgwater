@@ -66,3 +66,7 @@ AC_DEFUN([GW_CHECK_ALSA_MIXER], [
 AC_DEFUN([GW_CHECK_NL], [
     _GW_CHECK([nl], [libnl-3.0 $1], [linux/netlink.h $2])
 ])
+
+AC_DEFUN([GW_CHECK_WIN], [
+    _GW_CHECK([win], [$1], [Windows.h $2])
+])
