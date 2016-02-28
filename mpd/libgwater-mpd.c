@@ -159,10 +159,10 @@ _g_water_mpd_source_finalize(GSource *source)
 }
 
 static GSourceFuncs _g_water_mpd_source_funcs = {
-    _g_water_mpd_source_prepare,
-    _g_water_mpd_source_check,
-    _g_water_mpd_source_dispatch,
-    _g_water_mpd_source_finalize
+    .prepare  = _g_water_mpd_source_prepare,
+    .check    = _g_water_mpd_source_check,
+    .dispatch = _g_water_mpd_source_dispatch,
+    .finalize = _g_water_mpd_source_finalize,
 };
 
 GWaterMpdSource *
