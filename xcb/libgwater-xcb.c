@@ -49,7 +49,7 @@ struct _GWaterXcbSource {
 };
 
 static void
-_g_water_xcb_source_event_free(gpointer data, gpointer user_data)
+_g_water_xcb_source_event_free(gpointer data)
 {
     free(data);
 }
@@ -95,7 +95,7 @@ _g_water_xcb_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
 
     event = g_queue_pop_head(self->queue);
     ret = ((GWaterXcbEventCallback)callback)(event, user_data);
-    _g_water_xcb_source_event_free(event, NULL);
+    _g_water_xcb_source_event_free(event);
 
     return ret;
 }
@@ -105,8 +105,7 @@ _g_water_xcb_source_finalize(GSource *source)
 {
     GWaterXcbSource *self = (GWaterXcbSource *)source;
 
-    g_queue_foreach(self->queue, _g_water_xcb_source_event_free, NULL);
-    g_queue_free(self->queue);
+    g_queue_free_full(self->queue, _g_water_xcb_source_event_free);
 
     if ( self->connection_owned )
         xcb_disconnect(self->connection);
