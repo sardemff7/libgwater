@@ -261,19 +261,14 @@ g_water_mpd_source_new_for_mpd(GMainContext *context, struct mpd_async *mpd, GWa
 }
 
 void
-g_water_mpd_source_ref(GWaterMpdSource *self)
+g_water_mpd_source_free(GWaterMpdSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_mpd_source_unref(GWaterMpdSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }
 
 struct mpd_async *

@@ -34,8 +34,7 @@ GWaterNlSource *g_water_nl_source_new_cache_mngr(GMainContext *context, gint pro
 GWaterNlSource *g_water_nl_source_new_sock(GMainContext *context);
 GWaterNlSource *g_water_nl_source_new_for_cache_mngr(GMainContext *context, struct nl_cache_mngr *cache_mngr);
 GWaterNlSource *g_water_nl_source_new_for_sock(GMainContext *context, struct nl_sock *sock);
-void g_water_nl_source_ref(GWaterNlSource *self);
-void g_water_nl_source_unref(GWaterNlSource *self);
+void g_water_nl_source_free(GWaterNlSource *self);
 
 struct nl_sock *g_water_nl_source_get_sock(GWaterNlSource *source);
 struct nl_cache_mngr *g_water_nl_source_get_cache_mngr(GWaterNlSource *source);

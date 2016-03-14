@@ -186,19 +186,14 @@ g_water_nl_source_new_for_sock(GMainContext *context, struct nl_sock *sock)
 }
 
 void
-g_water_nl_source_ref(GWaterNlSource *self)
+g_water_nl_source_free(GWaterNlSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_nl_source_unref(GWaterNlSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }
 
 struct nl_sock *

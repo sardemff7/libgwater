@@ -163,19 +163,14 @@ g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *c
 }
 
 void
-g_water_xcb_source_ref(GWaterXcbSource *self)
+g_water_xcb_source_free(GWaterXcbSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_xcb_source_unref(GWaterXcbSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }
 
 xcb_connection_t *

@@ -112,17 +112,12 @@ g_water_win_source_new(GMainContext *context, guint events)
 }
 
 void
-g_water_win_source_ref(GWaterWinSource *self)
+g_water_win_source_free(GWaterWinSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_win_source_unref(GWaterWinSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }

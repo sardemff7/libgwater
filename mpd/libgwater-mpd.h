@@ -38,8 +38,7 @@ GWaterMpdSource *g_water_mpd_source_new(GMainContext *context, const gchar *host
 GWaterMpdSource *g_water_mpd_source_new_for_socket(GMainContext *context, GSocket *socket, GWaterMpdLineCallback callback, gpointer user_data, GDestroyNotify destroy_func);
 GWaterMpdSource *g_water_mpd_source_new_for_fd(GMainContext *context, gint fd, GWaterMpdLineCallback callback, gpointer user_data, GDestroyNotify destroy_func);
 GWaterMpdSource *g_water_mpd_source_new_for_mpd(GMainContext *context, struct mpd_async *mpd, GWaterMpdLineCallback callback, gpointer user_data, GDestroyNotify destroy_func);
-void g_water_mpd_source_ref(GWaterMpdSource *self);
-void g_water_mpd_source_unref(GWaterMpdSource *self);
+void g_water_mpd_source_free(GWaterMpdSource *self);
 
 struct mpd_async *g_water_mpd_source_get_mpd(GWaterMpdSource *source);
 

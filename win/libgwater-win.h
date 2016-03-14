@@ -31,8 +31,7 @@ G_BEGIN_DECLS
 typedef struct _GWaterWinSource GWaterWinSource;
 
 GWaterWinSource *g_water_win_source_new(GMainContext *context, guint events);
-void g_water_win_source_ref(GWaterWinSource *self);
-void g_water_win_source_unref(GWaterWinSource *self);
+void g_water_win_source_free(GWaterWinSource *self);
 
 G_END_DECLS
 

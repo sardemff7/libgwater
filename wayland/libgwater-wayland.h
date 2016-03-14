@@ -32,8 +32,7 @@ typedef struct _GWaterWaylandSource GWaterWaylandSource;
 
 GWaterWaylandSource *g_water_wayland_source_new(GMainContext *context, const gchar *name);
 GWaterWaylandSource *g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display *display);
-void g_water_wayland_source_ref(GWaterWaylandSource *self);
-void g_water_wayland_source_unref(GWaterWaylandSource *self);
+void g_water_wayland_source_free(GWaterWaylandSource *self);
 
 void g_water_wayland_source_set_error_callback(GWaterWaylandSource *self, GSourceFunc callback, gpointer user_data, GDestroyNotify destroy_notify);
 struct wl_display *g_water_wayland_source_get_display(GWaterWaylandSource *source);

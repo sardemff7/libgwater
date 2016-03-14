@@ -160,19 +160,14 @@ g_water_alsa_mixer_source_new_for_mixer(GMainContext *context, snd_mixer_t *mixe
 }
 
 void
-g_water_alsa_mixer_source_ref(GWaterAlsaMixerSource *self)
+g_water_alsa_mixer_source_free(GWaterAlsaMixerSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_alsa_mixer_source_unref(GWaterAlsaMixerSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }
 
 snd_mixer_t *

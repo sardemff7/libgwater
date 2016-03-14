@@ -32,8 +32,7 @@ typedef struct _GWaterAlsaMixerSource GWaterAlsaMixerSource;
 
 GWaterAlsaMixerSource *g_water_alsa_mixer_source_new(GMainContext *context, const gchar *card, snd_mixer_callback_t callback, gpointer user_data, GDestroyNotify destroy_func, gint *error);
 GWaterAlsaMixerSource *g_water_alsa_mixer_source_new_for_mixer(GMainContext *context, snd_mixer_t *mixer, snd_mixer_callback_t callback, gpointer user_data, GDestroyNotify destroy_func);
-void g_water_alsa_mixer_source_ref(GWaterAlsaMixerSource *self);
-void g_water_alsa_mixer_source_unref(GWaterAlsaMixerSource *self);
+void g_water_alsa_mixer_source_free(GWaterAlsaMixerSource *self);
 
 snd_mixer_t *g_water_alsa_mixer_source_get_mixer(GWaterAlsaMixerSource *source);
 

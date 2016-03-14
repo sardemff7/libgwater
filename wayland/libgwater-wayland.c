@@ -159,19 +159,14 @@ g_water_wayland_source_new_for_display(GMainContext *context, struct wl_display 
 }
 
 void
-g_water_wayland_source_ref(GWaterWaylandSource *self)
+g_water_wayland_source_free(GWaterWaylandSource *self)
 {
+    GSource * source = (GSource *)self;
     g_return_if_fail(self != NULL);
 
-    g_source_ref((GSource *)self);
-}
+    g_source_destroy(source);
 
-void
-g_water_wayland_source_unref(GWaterWaylandSource *self)
-{
-    g_return_if_fail(self != NULL);
-
-    g_source_unref((GSource *)self);
+    g_source_unref(source);
 }
 
 void
