@@ -122,10 +122,10 @@ Dependencies
 Licence
 -------
 
-libgwater is licenced under the terms of the [MIT license](http://opensource.org/licenses/MIT)
+libgwater is licenced under the terms of the [MIT license](//opensource.org/licenses/MIT)
 
 
 Author / Contact
 ----------------
 
-Quentin “Sardem FF7” Glidic (sardemff7+libgwater@sardemff7.net) — [My other Free Software projects](http://projects.sardemff7.net/)
+Quentin “Sardem FF7” Glidic (sardemff7+libgwater@sardemff7.net) — [My other Free Software projects](//www.sardemff7.net/)
