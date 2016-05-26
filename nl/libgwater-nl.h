@@ -31,7 +31,7 @@ G_BEGIN_DECLS
 typedef struct _GWaterNlSource GWaterNlSource;
 
 GWaterNlSource *g_water_nl_source_new_cache_mngr(GMainContext *context, gint protocol, gint flags, gint *error);
-GWaterNlSource *g_water_nl_source_new_sock(GMainContext *context);
+GWaterNlSource *g_water_nl_source_new_sock(GMainContext *context, gint protocol);
 GWaterNlSource *g_water_nl_source_new_for_cache_mngr(GMainContext *context, struct nl_cache_mngr *cache_mngr);
 GWaterNlSource *g_water_nl_source_new_for_sock(GMainContext *context, struct nl_sock *sock);
 void g_water_nl_source_free(GWaterNlSource *self);

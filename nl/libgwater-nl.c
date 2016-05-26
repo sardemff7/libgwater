@@ -129,7 +129,7 @@ g_water_nl_source_new_cache_mngr(GMainContext *context, gint protocol, gint flag
 }
 
 GWaterNlSource *
-g_water_nl_source_new_sock(GMainContext *context)
+g_water_nl_source_new_sock(GMainContext *context, gint protocol)
 {
     struct nl_sock *sock;
     GWaterNlSource *self;
@@ -138,6 +138,12 @@ g_water_nl_source_new_sock(GMainContext *context)
 
     if ( sock == NULL )
         return NULL;
+
+    if ( nl_connect(sock, protocol) < 0 )
+    {
+        nl_socket_free(sock);
+        return NULL;
+    }
 
     self = g_water_nl_source_new_for_sock(context, sock);
     self->owned = TRUE;
