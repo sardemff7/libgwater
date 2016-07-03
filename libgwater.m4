@@ -45,6 +45,12 @@ AC_DEFUN([GW_CHECK_WAYLAND], [
     _GW_CHECK([wayland], [wayland-client >= ${gw_wayland_wayland_min_version} $1], [errno.h $2])
 ])
 
+AC_DEFUN([GW_CHECK_WAYLAND_SERVER], [
+    gw_wayland_wayland_min_version="1.1.91"
+
+    _GW_CHECK([wayland-server], [wayland-server >= ${gw_wayland_wayland_min_version} $1], [errno.h $2])
+])
+
 AC_DEFUN([GW_CHECK_XCB], [
     _GW_CHECK([xcb], [xcb $1], [stdlib.h $2])
 ])
