@@ -71,10 +71,18 @@ _g_water_wayland_source_check(GSource *source)
 {
     GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
+    if ( self->error > 0 )
+        return TRUE;
+
     GIOCondition revents;
     revents = g_source_query_unix_fd(source, self->fd);
 
-    if ( revents == 0 )
+    if ( revents & G_IO_IN )
+    {
+        if ( wl_display_read_events(self->display) < 0 )
+            self->error = errno;
+    }
+    else
         wl_display_cancel_read(self->display);
 
     return ( revents > 0 );
@@ -89,7 +97,6 @@ _g_water_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer
     revents = g_source_query_unix_fd(source, self->fd);
     if ( ( self->error > 0 ) || ( revents & (G_IO_ERR | G_IO_HUP) ) )
     {
-        wl_display_cancel_read(self->display);
         errno = self->error;
         self->error = 0;
         if ( callback != NULL )
@@ -97,15 +104,6 @@ _g_water_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer
         return G_SOURCE_REMOVE;
     }
 
-    if ( revents & G_IO_IN )
-    {
-        if ( wl_display_read_events(self->display) < 0 )
-        {
-            if ( callback != NULL )
-                return callback(user_data);
-            return G_SOURCE_REMOVE;
-        }
-    }
     if ( wl_display_dispatch_pending(self->display) < 0 )
     {
         if ( callback != NULL )
