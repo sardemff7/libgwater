@@ -53,8 +53,14 @@ _g_water_wayland_source_prepare(GSource *source, gint *timeout)
 {
     GWaterWaylandSource *self = (GWaterWaylandSource *)source;
 
-    if ( wl_display_flush(self->display) < 0 )
+    *timeout = 0;
+    if ( wl_display_prepare_read(self->display) != 0 )
+        return TRUE;
+    else if ( wl_display_flush(self->display) < 0 )
+    {
         self->error = errno;
+        return TRUE;
+    }
 
     *timeout = -1;
     return FALSE;
@@ -68,6 +74,9 @@ _g_water_wayland_source_check(GSource *source)
     GIOCondition revents;
     revents = g_source_query_unix_fd(source, self->fd);
 
+    if ( revents == 0 )
+        wl_display_cancel_read(self->display);
+
     return ( revents > 0 );
 }
 
@@ -75,37 +84,36 @@ static gboolean
 _g_water_wayland_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
 {
     GWaterWaylandSource *self = (GWaterWaylandSource *)source;
+    GIOCondition revents;
 
-    if ( self->error > 0 )
+    revents = g_source_query_unix_fd(source, self->fd);
+    if ( ( self->error > 0 ) || ( revents & (G_IO_ERR | G_IO_HUP) ) )
     {
+        wl_display_cancel_read(self->display);
         errno = self->error;
+        self->error = 0;
         if ( callback != NULL )
             return callback(user_data);
-        return FALSE;
+        return G_SOURCE_REMOVE;
     }
-
-    GIOCondition revents;
-    revents = g_source_query_unix_fd(source, self->fd);
 
     if ( revents & G_IO_IN )
     {
-        if ( wl_display_dispatch(self->display) < 0 )
+        if ( wl_display_read_events(self->display) < 0 )
         {
             if ( callback != NULL )
                 return callback(user_data);
-            return FALSE;
+            return G_SOURCE_REMOVE;
         }
     }
-
-    errno = 0;
-    if ( revents & (G_IO_ERR | G_IO_HUP) )
+    if ( wl_display_dispatch_pending(self->display) < 0 )
     {
         if ( callback != NULL )
             return callback(user_data);
-        return FALSE;
+        return G_SOURCE_REMOVE;
     }
 
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 }
 
 static void
