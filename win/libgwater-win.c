@@ -68,7 +68,7 @@ _g_water_win_source_check(GSource *source)
 }
 
 static gboolean
-_g_water_win_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
+_g_water_win_source_dispatch(G_GNUC_UNUSED GSource *source, G_GNUC_UNUSED GSourceFunc callback, G_GNUC_UNUSED gpointer user_data)
 {
     MSG msg;
     while ( PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )

@@ -50,7 +50,7 @@ struct _GWaterNlSource {
 };
 
 static gboolean
-_g_water_nl_source_prepare(GSource *source, gint *timeout)
+_g_water_nl_source_prepare(G_GNUC_UNUSED GSource *source, gint *timeout)
 {
     *timeout = -1;
     return FALSE;
@@ -65,7 +65,7 @@ _g_water_nl_source_check(GSource *source)
 }
 
 static gboolean
-_g_water_nl_source_dispatch(GSource *source, GSourceFunc callback_, gpointer user_data)
+_g_water_nl_source_dispatch(GSource *source, G_GNUC_UNUSED GSourceFunc callback_, G_GNUC_UNUSED gpointer user_data)
 {
     GWaterNlSource *self = (GWaterNlSource *)source;
 

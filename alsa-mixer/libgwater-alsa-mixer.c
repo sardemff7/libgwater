@@ -71,7 +71,7 @@ _g_water_alsa_mixer_source_check(GSource *source)
 }
 
 static gboolean
-_g_water_alsa_mixer_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
+_g_water_alsa_mixer_source_dispatch(GSource *source, G_GNUC_UNUSED GSourceFunc callback, G_GNUC_UNUSED gpointer user_data)
 {
     GWaterAlsaMixerSource *self = (GWaterAlsaMixerSource *)source;
 
