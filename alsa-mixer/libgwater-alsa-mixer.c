@@ -44,12 +44,14 @@ struct _GWaterAlsaMixerSource {
     GSource source;
     gboolean mixer_owned;
     snd_mixer_t *mixer;
+    gpointer user_data;
+    GDestroyNotify destroy_func;
     gint size;
     gpointer *fds;
 };
 
 static gboolean
-_g_water_alsa_mixer_source_prepare(GSource *source, gint *timeout)
+_g_water_alsa_mixer_source_prepare(G_GNUC_UNUSED GSource *source, gint *timeout)
 {
     *timeout = -1;
     return FALSE;
@@ -84,6 +86,9 @@ _g_water_alsa_mixer_source_finalize(GSource *source)
     GWaterAlsaMixerSource *self = (GWaterAlsaMixerSource *)source;
 
     g_free(self->fds);
+
+    if ( self->destroy_func != NULL )
+        self->destroy_func(self->user_data);
 
     if ( self->mixer_owned )
         snd_mixer_close(self->mixer);
@@ -141,6 +146,8 @@ g_water_alsa_mixer_source_new_for_mixer(GMainContext *context, snd_mixer_t *mixe
     source = g_source_new(&_g_water_alsa_mixer_source_funcs, sizeof(GWaterAlsaMixerSource));
     self = (GWaterAlsaMixerSource *)source;
     self->mixer = mixer;
+    self->user_data = user_data;
+    self->destroy_func = destroy_func;
 
     gint i;
     self->size = snd_mixer_poll_descriptors_count(self->mixer);
