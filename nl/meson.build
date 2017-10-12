@@ -12,10 +12,10 @@ libnl = dependency('libnl-3.0')
 
 libgwater_nl_inc = include_directories('.')
 libgwater_nl_dep = [ libnl, glib ]
-libgwater_nl_lib = static_library('libgwater-nl', [
+libgwater_nl_lib = static_library('libgwater-nl', files(
         'libgwater-nl.h',
         'libgwater-nl.c',
-    ],
+    ),
     dependencies: libgwater_nl_dep,
     include_directories: libgwater_nl_inc,
 )

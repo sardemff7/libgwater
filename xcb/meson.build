@@ -7,10 +7,10 @@ xcb = dependency('xcb')
 
 libgwater_xcb_inc = include_directories('.')
 libgwater_xcb_dep = [ xcb, glib ]
-libgwater_xcb_lib = static_library('libgwater-xcb', [
+libgwater_xcb_lib = static_library('libgwater-xcb', files(
         'libgwater-xcb.h',
         'libgwater-xcb.c',
-    ],
+    ),
     dependencies: libgwater_xcb_dep,
     include_directories: libgwater_xcb_inc,
 )

@@ -11,10 +11,10 @@ glib = dependency('glib-2.0', version: '>= @0@'.format(glib_min_version))
 
 libgwater_win_inc = include_directories('.')
 libgwater_win_dep = [ glib ]
-libgwater_win_lib = static_library('libgwater-win', [
+libgwater_win_lib = static_library('libgwater-win', files(
         'libgwater-win.h',
         'libgwater-win.c',
-    ],
+    ),
     dependencies: libgwater_win_dep,
     include_directories: libgwater_win_inc,
 )

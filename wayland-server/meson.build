@@ -13,10 +13,10 @@ wayland = dependency('wayland-server', version: '>= @0@'.format(wayland_min_vers
 
 libgwater_wayland_server_inc = include_directories('.')
 libgwater_wayland_server_dep = [ wayland, glib ]
-libgwater_wayland_server_lib = static_library('libgwater-wayland-server', [
+libgwater_wayland_server_lib = static_library('libgwater-wayland-server', files(
         'libgwater-wayland-server.h',
         'libgwater-wayland-server.c',
-    ],
+    ),
     dependencies: libgwater_wayland_server_dep,
     include_directories: libgwater_wayland_server_inc,
 )
