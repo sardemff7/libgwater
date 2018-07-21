@@ -94,7 +94,7 @@ _g_water_xcb_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
     gboolean ret;
 
     event = g_queue_pop_head(self->queue);
-    ret = ((GWaterXcbEventCallback)callback)(event, user_data);
+    ret = ((GWaterXcbEventCallback)(void *)callback)(event, user_data);
     _g_water_xcb_source_event_free(event);
 
     return ret;
@@ -157,7 +157,7 @@ g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *c
 
     g_source_attach(source, context);
 
-    g_source_set_callback(source, (GSourceFunc)callback, user_data, destroy_func);
+    g_source_set_callback(source, (GSourceFunc)(void *)callback, user_data, destroy_func);
 
     return self;
 }
