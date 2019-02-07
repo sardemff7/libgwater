@@ -126,12 +126,12 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
     self->error = MPD_ERROR_SUCCESS;
 
     if ( error != MPD_ERROR_SUCCESS )
-        return ((GWaterMpdLineCallback)callback)(NULL, error, user_data);
+        return ((GWaterMpdLineCallback)(void *)callback)(NULL, error, user_data);
 
     if ( events != 0 )
     {
         if ( ! mpd_async_io(self->mpd, events) )
-            return ((GWaterMpdLineCallback)callback)(NULL, mpd_async_get_error(self->mpd), user_data);
+            return ((GWaterMpdLineCallback)(void *)callback)(NULL, mpd_async_get_error(self->mpd), user_data);
     }
 
     gboolean ret;
@@ -143,7 +143,7 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
         if ( ( line == NULL ) && ( error == MPD_ERROR_SUCCESS ) )
             /* Wait for the end of the line */
             return TRUE;
-    } while (( ret = ((GWaterMpdLineCallback)callback)(line, error, user_data) ));
+    } while (( ret = ((GWaterMpdLineCallback)(void *)callback)(line, error, user_data) ));
     return ret;
 }
 
@@ -255,7 +255,7 @@ g_water_mpd_source_new_for_mpd(GMainContext *context, struct mpd_async *mpd, GWa
 
     g_source_attach(source, context);
 
-    g_source_set_callback(source, (GSourceFunc)callback, user_data, destroy_func);
+    g_source_set_callback(source, (GSourceFunc)(void *)callback, user_data, destroy_func);
 
     return self;
 }
