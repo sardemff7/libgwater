@@ -76,7 +76,7 @@ _g_water_nl_source_dispatch(GSource *source, G_GNUC_UNUSED GSourceFunc callback_
     else
         g_assert_not_reached();
 
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 }
 
 static void

@@ -83,7 +83,7 @@ _g_water_wayland_server_source_dispatch(GSource *source, GSourceFunc callback, g
         {
             if ( callback != NULL )
                 return callback(user_data);
-            return FALSE;
+            return G_SOURCE_REMOVE;
         }
     }
 
@@ -92,10 +92,10 @@ _g_water_wayland_server_source_dispatch(GSource *source, GSourceFunc callback, g
     {
         if ( callback != NULL )
             return callback(user_data);
-        return FALSE;
+        return G_SOURCE_REMOVE;
     }
 
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 }
 
 static void

@@ -77,7 +77,7 @@ _g_water_win_source_dispatch(G_GNUC_UNUSED GSource *source, G_GNUC_UNUSED GSourc
         DispatchMessage(&msg);
     }
 
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 }
 
 static void

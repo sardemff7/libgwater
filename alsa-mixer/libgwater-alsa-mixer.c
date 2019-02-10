@@ -77,7 +77,7 @@ _g_water_alsa_mixer_source_dispatch(GSource *source, G_GNUC_UNUSED GSourceFunc c
 
     snd_mixer_handle_events(self->mixer);
 
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 }
 
 static void

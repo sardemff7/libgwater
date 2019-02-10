@@ -142,7 +142,7 @@ _g_water_mpd_source_dispatch(GSource *source, GSourceFunc callback, gpointer use
         error = mpd_async_get_error(self->mpd);
         if ( ( line == NULL ) && ( error == MPD_ERROR_SUCCESS ) )
             /* Wait for the end of the line */
-            return TRUE;
+            return G_SOURCE_CONTINUE;
     } while (( ret = ((GWaterMpdLineCallback)(void *)callback)(line, error, user_data) ));
     return ret;
 }
