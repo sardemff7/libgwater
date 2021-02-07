@@ -13,7 +13,18 @@ else
     gio_platform = dependency('gio-windows-2.0')
 endif
 
-foreach h : [ 'errno.h', 'sys/types.h', 'sys/socket.h' ]
+headers = [
+    'errno.h',
+    'sys/types.h',
+]
+if host_machine.system() != 'windows'
+    headers += [
+        'sys/socket.h',
+    ]
+endif
+
+
+foreach h : headers
     if not c_compiler.has_header(h)
         error('@0@ required but not found'.format(h))
     endif
