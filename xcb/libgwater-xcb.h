@@ -32,11 +32,17 @@ typedef struct _GWaterXcbSource GWaterXcbSource;
 
 typedef gboolean (*GWaterXcbEventCallback)(xcb_generic_event_t *event, gpointer user_data);
 
-GWaterXcbSource *g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func);
-GWaterXcbSource *g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func);
+GWaterXcbSource *g_water_xcb_source_new(GMainContext *context, const gchar *display, 
+					gint *screen, GWaterXcbEventCallback callback, 
+					gpointer user_data, GDestroyNotify destroy_func);
+GWaterXcbSource *g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, 
+						       xcb_xim_t *im, GWaterXcbEventCallback callback, 
+						       gpointer user_data, GDestroyNotify destroy_func);
 void g_water_xcb_source_free(GWaterXcbSource *self);
 
 xcb_connection_t *g_water_xcb_source_get_connection(GWaterXcbSource *source);
+
+xcb_xim_t *g_water_xcb_source_get_im(GWaterXcbSource *self);
 
 G_END_DECLS
 

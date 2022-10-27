@@ -36,6 +36,9 @@
 
 #include <glib.h>
 
+#include <xcb-imdkit/encoding.h>
+#include <xcb-imdkit/imclient.h>
+#include <xcb-imdkit/ximproto.h>
 #include <xcb/xcb.h>
 
 #include "libgwater-xcb.h"
@@ -44,6 +47,7 @@ struct _GWaterXcbSource {
     GSource source;
     gboolean connection_owned;
     xcb_connection_t *connection;
+    xcb_xim_t *im;
     gpointer fd;
     GQueue *queue;
 };
@@ -107,8 +111,11 @@ _g_water_xcb_source_finalize(GSource *source)
 
     g_queue_free_full(self->queue, _g_water_xcb_source_event_free);
 
-    if ( self->connection_owned )
+    if ( self->connection_owned ) {
+        xcb_xim_close(self->im);
+        xcb_xim_destroy(self->im);
         xcb_disconnect(self->connection);
+    }
 }
 
 static GSourceFuncs _g_water_xcb_source_funcs = {
@@ -125,6 +132,7 @@ g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen
 
     xcb_connection_t *connection;
     GWaterXcbSource *self;
+    xcb_compound_text_init();
 
     connection = xcb_connect(display, screen);
     if ( xcb_connection_has_error(connection) )
@@ -133,13 +141,16 @@ g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen
         return NULL;
     }
 
-    self = g_water_xcb_source_new_for_connection(context, connection, callback, user_data, destroy_func);
+    xcb_xim_t *im = xcb_xim_create(connection, *screen, NULL);
+    self = g_water_xcb_source_new_for_connection(context, connection, im, callback, user_data, destroy_func);
     self->connection_owned = TRUE;
     return self;
 }
 
 GWaterXcbSource *
-g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection, GWaterXcbEventCallback callback, gpointer user_data, GDestroyNotify destroy_func)
+g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *connection,
+				      xcb_xim_t *im, GWaterXcbEventCallback callback, 
+				      gpointer user_data, GDestroyNotify destroy_func)
 {
     g_return_val_if_fail(connection != NULL, NULL);
     g_return_val_if_fail(callback != NULL, NULL);
@@ -150,6 +161,7 @@ g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *c
     source = g_source_new(&_g_water_xcb_source_funcs, sizeof(GWaterXcbSource));
     self = (GWaterXcbSource *)source;
     self->connection = connection;
+    self->im = im;
 
     self->queue = g_queue_new();
 
@@ -158,6 +170,9 @@ g_water_xcb_source_new_for_connection(GMainContext *context, xcb_connection_t *c
     g_source_attach(source, context);
 
     g_source_set_callback(source, (GSourceFunc)(void *)callback, user_data, destroy_func);
+
+    xcb_xim_set_use_compound_text(self->im, true);
+    xcb_xim_set_use_utf8_string(self->im, true);
 
     return self;
 }
@@ -179,4 +194,11 @@ g_water_xcb_source_get_connection(GWaterXcbSource *self)
     g_return_val_if_fail(self != NULL, NULL);
 
     return self->connection;
+}
+
+xcb_xim_t *
+g_water_xcb_source_get_im(GWaterXcbSource *self) {
+    g_return_val_if_fail(self != NULL, NULL);
+
+    return self->im;
 }
