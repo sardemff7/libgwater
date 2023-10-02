@@ -40,7 +40,7 @@ Example usage of XCB GSource
 
 2. Add libgwater as a Git submodule
     ```shell
-    git submodule add git://github.com/sardemff7/libgwater
+    git submodule add https://github.com/sardemff7/libgwater
     ```
 
 3. Add the m4 macro call to your `configure.ac` (with an additionnal package, `xcb-util`)
@@ -128,4 +128,4 @@ libgwater is licenced under the terms of the [MIT license](//opensource.org/lice
 Author / Contact
 ----------------
 
-Quentin “Sardem FF7” Glidic (sardemff7+libgwater@sardemff7.net) — [My other Free Software projects](//www.sardemff7.net/)
+Morgane “Sardem FF7” Glidic (sardemff7+libgwater@sardemff7.net) — [My other Free Software projects](//www.val-sans-retour.fr/en/foss/)
