@@ -1,7 +1,7 @@
 /*
  * libgwater-wayland - Wayland GSource
  *
- * Copyright © 2014-2017 Quentin "Sardem FF7" Glidic
+ * Copyright © 2014-2024 Morgane "Sardem FF7" Glidic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
